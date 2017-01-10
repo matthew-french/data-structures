@@ -68,9 +68,6 @@ HashTable.prototype.retrieveAll = function() {
   return allNodes;
 }
 
-console.log('hello World'.charCodeAt(4));
-console.log(100%30);
-
 var myHT = new HashTable(30);
 
 console.log(myHT.hash('becca'));
