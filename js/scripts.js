@@ -1,90 +1,108 @@
-// Hash tables
-// Big O: 0(1)
 
-function HashTable(size) {
-  this.buckets = Array(size);
-  this.numBuckets = this.buckets.length;
+// Recursion function example
+function factorial(num) {
+  if (num === 1) {
+    return num;
+  } else {
+    return num * factorial(num -1);
+  }
 }
 
-function HashNode(key, value, next) {
-  this.key =key;
+// Binary Search Tree
+function BST(value) {
   this.value = value;
-  this.next = next || null;
+  this.left = null;
+  this.right = null;
 }
 
-HashTable.prototype.hash = function(key) {
-  var total = 0;
-  for (var i = 0; i < key.length; i++) {
-    total += key.charCodeAt(i);
+// BIG O: O(n)
+BST.prototype.insert = function(value) {
+  if (value <= this.value) {
+    if (!this.left) this.left = new BST(value);
+    else this.left.insert(value);
   }
-  var bucket = total % this.numBuckets;
-
-  return bucket;
-}
-
-HashTable.prototype.insert = function(key, value) {
-  var index = this.hash(key);
-  if (!this.buckets[index]) {
-    this.buckets[index] = new HashNode(key, value);
-  }
-  else if (this.buckets[index].key === key) {
-    this.buckets[index].value = value;
-  }
-  else {
-    var currentNode = this.buckets[index];
-    while (currentNode.next) {
-      if (currentNode.next.key === key) {
-        currentNode.next.value = value;
-        return;
-      }
-      currentNode = currentNode.next;
-    }
-    currentNode.next = new HashNode(key, value);
+  else if (value > this.value) {
+    if (!this.right) this.right = new BST(value);
+    else this.right.insert(value);
   }
 }
 
-HashTable.prototype.get = function(key) {
-  var index = this.hash(key);
-  if (!this.buckets) return null;
-  else {
-    var currentNode = this.buckets[index];
-    while (currentNode) {
-      if (currentNode.key === key) return currentNode.value;
-      currentNode = currentNode.next;
-    }
-    return null;
+// BIG O: O(n)
+BST.prototype.contains = function(value) {
+  if (value === this.value) return true;
+  else if (value < this.value) {
+    if (!this.left) return false;
+    else return this.left.contains(value);
+  }
+  else if (value > this.value) {
+    if (!this.right) return false;
+    else return this.right.contains(value);
   }
 }
 
-HashTable.prototype.retrieveAll = function() {
-  var allNodes = [];
-  for (var i = 0; i < this.numBuckets; i++) {
-    var currentNode = this.buckets[i];
-    while (currentNode) {
-      allNodes.push(currentNode.value);
-      currentNode = currentNode.next;
-    }
-  }
-  return allNodes;
+// in-order, pre-order, post-order depth First - Big O: O(n)
+BST.prototype.depthFirstTraversal = function(iteratorFunc, order) {
+  if (order === 'pre-order') iteratorFunc(this.value);
+  if (this.left) this.left.depthFirstTraversal(iteratorFunc, order);
+  if (order === 'in-order') iteratorFunc(this.value);
+  if (this.right) this.right.depthFirstTraversal(iteratorFunc, order);
+  if (order === 'post-order') iteratorFunc(this.value);
 }
 
-console.log('hello World'.charCodeAt(4));
-console.log(100%30);
+BST.prototype.breadthFirstTraversal = function(iteratorFunc) {
+  console.log(this);
+  var queue = [this];
+  console.log(queue);
+  while (queue.length) {
+    var treeNode = queue.shift();
+    iteratorFunc(treeNode);
+    if (treeNode.left) queue.push(treeNode.left);
+    if (treeNode.right) queue.push(treeNode.right);
+  }
+}
 
-var myHT = new HashTable(30);
+BST.prototype.getMinVal = function() {
+  if (this.left)
+    return this.left.getMinVal();
+  else
+    return this.value;
+}
 
-console.log(myHT.hash('becca'));
-console.log(myHT.insert('Dean','dean@gmail.com'));
-console.log(myHT.insert('Megan','megan@gmail.com'));
-console.log(myHT.insert('Dane','dane@yahoo.com'));
-console.log(myHT.insert('Dean','deammachine@gmail.com'));
-console.log(myHT.insert('Megan','megansmith@gmail.com'));
-console.log(myHT.insert('Dane','dane1010@gmail.com'));
-console.log(myHT.insert('Joe','joe@facebook.com'));
-console.log(myHT.insert('Samantha','samantha@twitter.com'));
-console.log(myHT.get('Dane'));
-console.log(myHT.get('Megan'));
-console.log(myHT.get('Dean'));
-console.log(myHT.retrieveAll());
+BST.prototype.getMaxVal = function() {
+  if (this.right)
+    return this.right.getMaxVal();
+  else
+    return this.value;
+}
 
-console.log(myHT.buckets)
+
+
+var bst = new BST(50);
+
+bst.insert(30);
+bst.insert(70);
+bst.insert(100);
+bst.insert(60);
+bst.insert(59);
+bst.insert(20);
+bst.insert(45);
+bst.insert(35);
+bst.insert(85);
+bst.insert(105);
+bst.insert(10);
+
+// console.log(bst.right.right);
+// console.log(bst.contains(10));
+// console.log(bst.contains(16));
+// console.log(bst.depthFirstTraversal(log, 'in-order'));
+// console.log(bst.depthFirstTraversal(log, 'pre-order'));
+// console.log(bst.depthFirstTraversal(log, 'post-order'));
+
+console.log(bst.breadthFirstTraversal(log));
+
+// console.log('MIN : ',bst.getMinVal());
+// console.log('MAX : ',bst.getMaxVal());
+
+function log(node) {
+  console.log(node.value);
+}
