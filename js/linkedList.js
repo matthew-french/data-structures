@@ -44,6 +44,16 @@ LinkedList.prototype.removeTail = function() {
   return val;
 }
 
+LinkedList.prototype.removeNode = function(node) {
+  if (node !== this.head && node !== this.tail) {
+    node.prev.next = node.next;
+    node.next.prev = node.prev;
+  } else {
+    if (node === this.head) this.removeHead();
+    if (node === this.tail) this.removeTail();
+  }
+}
+
 // BIG O: O(n)
 LinkedList.prototype.search = function(searchValue) {
   var currentNode = this.head;
